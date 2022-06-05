@@ -1,0 +1,72 @@
+<div class="actionContainer" *ngIf="isOn">
+<mat-card class="box register-panel">
+  <form class="example-form" #form="ngForm">
+    <mat-card-content>
+      <mat-form-field>
+        <input matInput
+               ngModel
+               class="form-control"
+               name="Username"
+               id="Username"
+               placeholder="Username"
+               #Username="ngModel">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Enter password</mat-label>
+        <input
+          matInput [type]="hide ? 'password' : 'text'"
+          ngModel
+          name="Password"
+          class="form-control"
+          id="Password"
+          #Password="ngModel">
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="changeHide()"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Confirm Password</mat-label>
+        <input
+          matInput [type]="hide ? 'password' : 'text'"
+          ngModel
+          name="ConfirmPassword"
+          class="form-control"
+          id="ConfirmPassword"
+          #ConfirmPassword="ngModel">
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="changeHide()"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput
+               ngModel
+               class="form-control"
+               name="Email"
+               id="Email"
+               placeholder="Email"
+               #Email="ngModel">
+      </mat-form-field>
+      <br>
+      <button mat-stroked-button
+              mat-raised-button
+              color="registerButton"
+              routerlink='/register'
+              class="btn btn-primary registerButton" type="submit"
+              (click)="onSubmit(form)">
+        Register
+      </button>
+    </mat-card-content>
+  </form>
+</mat-card>
+</div>
+<div class="actionContainer" *ngIf="!isOn"></div>

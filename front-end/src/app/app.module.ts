@@ -14,6 +14,14 @@ import {MatCardModule} from "@angular/material/card";
 import { TopBarComponent } from './components/top-bar/top-bar.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatListModule} from "@angular/material/list";
+import {FormsModule} from "@angular/forms";
+import { RegisterComponent } from './components/register/register.component';
+import {MatInputModule} from "@angular/material/input";
+import {UserService} from "./services/user.service";
+import {DatePipe} from "@angular/common";
 
 
 @NgModule({
@@ -21,20 +29,26 @@ import { HomeComponent } from './components/home/home.component';
     AppComponent,
     FilePickerComponent,
     TopBarComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatIconModule,
-    MatButtonModule,
-    HttpClientModule,
-    MatProgressBarModule,
-    MatCardModule,
-    MatToolbarModule
-  ],
-  providers: [FileService],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatIconModule,
+        MatButtonModule,
+        HttpClientModule,
+        MatProgressBarModule,
+        MatCardModule,
+        MatToolbarModule,
+        MatFormFieldModule,
+        MatListModule,
+        FormsModule,
+        MatInputModule,
+    ],
+  providers: [FileService, UserService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

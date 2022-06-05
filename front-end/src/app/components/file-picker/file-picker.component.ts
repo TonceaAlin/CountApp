@@ -6,6 +6,9 @@ import {any} from "codelyzer/util/function";
 import {FileService} from "../../services/file.service";
 import {Detection} from "../../domain/detection";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
+import {NgForm} from "@angular/forms";
+import {DatePipe} from "@angular/common";
+import {Session} from "../../domain/session";
 
 @Component({
   selector: 'app-file-picker',
@@ -15,6 +18,7 @@ import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 export class FilePickerComponent{
 
   @Output() setCounts = new EventEmitter<Prediction[]>()
+  sessionStarted: boolean = false;
   fileName = '';
   progress = 0;
   selectedFile? : File;
@@ -25,7 +29,7 @@ export class FilePickerComponent{
   displayImage : boolean = false;
   selectedFiles: string[] = [];
   file : any;
-  constructor(private service : FileService, private sanitizer: DomSanitizer) {
+  constructor(private service : FileService, private sanitizer: DomSanitizer, public datepipe: DatePipe) {
   }
 
   onFileSelected(event: any) {
@@ -67,11 +71,17 @@ export class FilePickerComponent{
           this.progress = 0;
         }
       )
-
-      // upload$.pipe(
-      //   tap((result: any) => console.log(result)
-      //   )).subscribe();
     }
   }
-
+  startSession(form: NgForm){
+    // this.sessionStarted = true;
+    let name = form.value.name
+    let now = new Date();
+    let time = this.datepipe.transform(now, 'medium');
+    let user = localStorage.getItem("Id")
+    let session = new Session(name, time, user);
+    this.service.startSession(session).subscribe((result: any) =>{
+      console.log(result)
+    });
+  }
 }

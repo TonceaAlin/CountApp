@@ -1,0 +1,45 @@
+<div class="actionContainer">
+  <mat-card class="box home-panel">
+    <form class="example-form" (ngSubmit)="onSubmit(form)" #form="ngForm">
+      <mat-card-content>
+        <mat-form-field>
+          <input matInput placeholder="Username"
+                 ngModel
+                 name="Username"
+                 class="form-control"
+                 id="Username"
+                 #Username="ngModel">
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+          <input matInput placeholder="Password"
+                 type="password"
+                 ngModel
+                 class="form-control"
+                 name="Password"
+                 id="Password"
+                 #Password="ngModel">
+        </mat-form-field>
+        <br>
+        <button
+          mat-stroked-button
+          class="btn-block loginButton mat-primary"
+          mat-raised-button
+          color="primary"
+          cdkFocusInitial>
+          Log in
+        </button>
+        <span class="registerInfo">Don't have an account ? Register below</span>
+        <mat-list-item>
+          <button
+            mat-stroked-button
+            mat-raised-button
+            color="mat-primary"
+            routerlink='/register'
+            class="btn btn-primary registerButton"
+            (click)="gotoRegister()">Register</button>
+        </mat-list-item>
+      </mat-card-content>
+    </form>
+  </mat-card>
+</div>

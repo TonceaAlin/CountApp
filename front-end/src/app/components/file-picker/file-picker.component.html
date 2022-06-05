@@ -1,3 +1,4 @@
+<mat-card-content *ngIf="sessionStarted">
 <input  multiple [hidden]="true" type="file" class="file-input"
        (change)="onFileSelected($event)" #filePicker>
 
@@ -21,4 +22,18 @@
   <br>
   <img mat-card-image [src]="img" alt="smth bad">
 </div>
-
+</mat-card-content>
+<mat-card-content *ngIf="!sessionStarted" class="buttons">
+  <form class="session-form" (ngSubmit)="startSession(form)" #form="ngForm">
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>Session name</mat-label>
+      <input
+        id="name"
+        name="name"
+        ngModel
+        matInput placeholder="Ex. 2020 harvest"
+        #Name="ngModel">
+    </mat-form-field>
+    <button mat-raised-button="right"> Start Session</button>
+  </form>
+</mat-card-content>

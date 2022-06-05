@@ -1,0 +1,66 @@
+.actionContainer {
+  padding-top: 10%;
+  display: flex;
+  align-items:flex-start;
+  justify-content:center;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+
+}
+
+.actionContainer span{
+  color: black;
+  align-items: center;
+  opacity: 1;
+  display: block;
+  padding-left: 45px;
+}
+
+.actionContainer mat-form-field {
+  width: 90%;
+  min-width: 500px;
+  padding-left: 5%;
+}
+
+.actionContainer error-message{
+  padding-left:10px;
+  color:red;
+}
+
+.actionContainer .loginButton{
+  border-color: black;
+  width:50%;
+  height: 100%;
+  opacity: 1;
+  align-self: center;
+  margin-left: 25%;
+  margin-bottom: 3%;
+}
+
+.actionContainer .registerInfo{
+  padding-top:8px;
+  font-size: 16px;
+  text-align: center;
+  align-self: center;
+  align-items: center;
+
+}
+
+.actionContainer .registerButton{
+  background-color: springgreen;
+  border-color: black;
+  width:40%;
+  height: 80%;
+  opacity: 1;
+  align-self: center;
+  margin-left: 30%;
+  margin-top: 3%;
+}
+
+.actionContainer .error-message{
+  align-items: center;
+  align-self: center;
+  text-align: center;
+  color:red;
+}

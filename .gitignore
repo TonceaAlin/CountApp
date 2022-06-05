@@ -33,3 +33,6 @@ build/
 .vscode/
 
 results/
+
+### PERSONAL DATA ###
+src/main/resources/application.properties

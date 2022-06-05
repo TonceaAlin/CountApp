@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpRequest} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Detection} from "../domain/detection";
+import {Session} from "../domain/session";
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +21,9 @@ export class FileService {
     return this.httpClient.post<Detection>(`${(this.baseUrl)}/file/count-apples`, data, {
       reportProgress: true
     })
-  //   const upload$ = new HttpRequest('POST', `${(this.baseUrl)}/file/count-apples`, data, {
-  //     reportProgress: true,
-  //     responseType: 'json'
-  //   });
-  //   return this.httpClient.request<Detection>(upload$)
   }
 
+  startSession(data: Session): any{
+    return this.httpClient.post<any>(`${(this.baseUrl)}/start-session`, data)
+  }
 }

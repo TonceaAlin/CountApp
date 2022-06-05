@@ -2,7 +2,13 @@ package ro.ubb.countapp.domain;
 
 import java.nio.file.Path;
 
+
 public class Detection {
+
+    public Detection(String noDetectedApples, String imageBytes) {
+        this.noDetectedApples = noDetectedApples;
+        this.imageBytes = imageBytes;
+    }
 
     private String noDetectedApples;
     private String imageBytes;

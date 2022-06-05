@@ -1,0 +1,24 @@
+<input  multiple [hidden]="true" type="file" class="file-input"
+       (change)="onFileSelected($event)" #filePicker>
+
+<div class="file-picker">
+  <div>
+  <h2>{{fileName  ? "Files are processed by the model" : "No file uploaded yet."  }}
+    <button mat-mini-fab color="primary" class="upload-btn" (click)="filePicker.click()">
+    <mat-icon>attach_file</mat-icon>
+  </button></h2>
+    <div *ngIf="selectedFile && !detection" class="progress">
+      <mat-progress-bar mode="indeterminate" color="warn"></mat-progress-bar>
+    </div>
+  </div>
+</div>
+
+<!--<div *ngIf="detection">-->
+<!--  <img mat-card-image [src]="this.image" alt="something">-->
+<!--</div>-->
+<div class="file-picker" *ngFor="let img of this.images">
+  <h3>{{this.numberOfApples[this.images.indexOf(img)] == 1 ? "1 apple detected" : this.numberOfApples[this.images.indexOf(img)] + " apples detected"}}</h3>
+  <br>
+  <img mat-card-image [src]="img" alt="smth bad">
+</div>
+

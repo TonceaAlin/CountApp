@@ -1,0 +1,14 @@
+img{
+  object-fit: cover; /*this makes the image in src fit to the size specified below*/
+  width: 50%;
+  height: 50%;
+
+}
+.file-picker{
+  margin-top: 10vh;
+  margin-left: 40vw;
+  .progress{
+    position: absolute;
+    width: 20%;
+  }
+}

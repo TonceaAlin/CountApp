@@ -6,7 +6,13 @@ import org.springframework.web.multipart.MultipartFile;
 import ro.ubb.countapp.domain.Detection;
 import ro.ubb.countapp.services.FileService;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/file")
@@ -18,13 +24,14 @@ public class CountController {
 
     @PostMapping(value = "/count-apples")
     @ResponseBody
-    public Detection getNumberOfApples(@RequestParam(name="applesImage") MultipartFile file) throws IOException {
-        Detection detection = fileService.sendFileToModel(file);
-        System.out.println("here");
-        System.out.println(file.getName());
-        System.out.println(file.getContentType());
-        System.out.println(file.getBytes());
-        return detection;
+    public Detection[] getNumberOfApples(@RequestParam(name="files[]") MultipartFile[] files) throws IOException{
+        List<String> fileNames = new ArrayList<>();
+        fileService.initFolder();
+        Arrays.stream(files).forEach(file -> {
+            System.out.println(file.getOriginalFilename());
+            fileService.saveFileToFolder(file);
+            fileNames.add(file.getOriginalFilename());
+        });
+        return fileService.sendPathToModel(fileNames);
     }
-
 }

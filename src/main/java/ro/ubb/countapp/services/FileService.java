@@ -1,11 +1,9 @@
 package ro.ubb.countapp.services;
 
-import org.springframework.core.io.FileSystemResource;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ro.ubb.countapp.domain.Detection;
@@ -16,32 +14,44 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Component
 public class FileService {
+    public static final String folderPath = "incoming-files//";
+    public static final Path filePath = Paths.get(folderPath);
 
+    public void saveFileToFolder(MultipartFile file){
+        try{
+            byte[] bytes = file.getBytes();
+            Files.write(Paths.get(folderPath + file.getOriginalFilename()), bytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    public Detection sendFileToModel(MultipartFile file) throws IOException {
+    public Detection[] sendPathToModel(List<String> fileNames) {
         String url = "http://127.0.0.1:5000/callModel";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.ALL));
         Map<String, Path> map = new HashMap<>();
-        Path pathToImage = saveToTempFiles(file);
-        map.put("image", pathToImage);
+        map.put("image", Paths.get(folderPath).toAbsolutePath());
         HttpEntity<Map<String, Path>> entity = new HttpEntity<>(map, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-        Detection detection = new Detection();
-        detection.setNoDetectedApples(response.getBody());
-        String resultName = "results/" + pathToImage.getFileName();
-        File resultImage = new File(resultName);
-        byte[] imageContent = Files.readAllBytes(resultImage.toPath());
-        String encodedFile = Base64.getEncoder().encodeToString(imageContent);
-        detection.setImageBytes(encodedFile);
-        System.out.println(Paths.get(resultName));
-        return detection;
+        ResponseEntity<Object[]> response = restTemplate.exchange(url, HttpMethod.POST, entity, Object[].class);
+
+        List<Detection>  detections  = new ArrayList<>();
+        List<String> results = Arrays.stream(Objects.requireNonNull(response.getBody())).map(Object::toString).collect(Collectors.toList());
+        fileNames.forEach(file -> {
+            try {
+                detections.add(new Detection(results.get(fileNames.indexOf(file)), Base64.getEncoder().encodeToString( Files.readAllBytes(Paths.get("results/" + file)))));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return detections.toArray(new Detection[detections.size()]);
     }
 
     private Path saveToTempFiles(MultipartFile file) {
@@ -57,4 +67,9 @@ public class FileService {
         }
         return Paths.get("invalid/path");
     }
+
+    public void initFolder() throws IOException {
+        FileUtils.cleanDirectory(new File(folderPath));
+    }
+
 }

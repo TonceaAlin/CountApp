@@ -22,6 +22,10 @@ import { RegisterComponent } from './components/register/register.component';
 import {MatInputModule} from "@angular/material/input";
 import {UserService} from "./services/user.service";
 import {DatePipe} from "@angular/common";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {OverlayModule} from "@angular/cdk/overlay";
+import { ResultsComponent } from './components/results/results.component';
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -31,7 +35,8 @@ import {DatePipe} from "@angular/common";
     TopBarComponent,
     HomeComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    ResultsComponent
   ],
     imports: [
         BrowserModule,
@@ -47,8 +52,10 @@ import {DatePipe} from "@angular/common";
         MatListModule,
         FormsModule,
         MatInputModule,
+        OverlayModule,
+        MatTableModule
     ],
-  providers: [FileService, UserService, DatePipe],
+  providers: [FileService, UserService, DatePipe, MatSnackBar],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

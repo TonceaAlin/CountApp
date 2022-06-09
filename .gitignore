@@ -29,10 +29,26 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+node/
+bin/
+
 ### VS Code ###
 .vscode/
 
 results/
+
+# misc
+/.angular/cache
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+/node_modules
 
 ### PERSONAL DATA ###
 src/main/resources/application.properties

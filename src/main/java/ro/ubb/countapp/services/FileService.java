@@ -1,12 +1,14 @@
 package ro.ubb.countapp.services;
 
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ro.ubb.countapp.domain.Detection;
+import ro.ubb.countapp.repository.DetectionRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +21,12 @@ import java.util.stream.Collectors;
 @Service
 @Component
 public class FileService {
+
+    @Autowired
+    DetectionRepository repository;
+
+    @Autowired
+    SessionService  sessionService;
     public static final String folderPath = "incoming-files//";
     public static final Path filePath = Paths.get(folderPath);
 
@@ -31,7 +39,7 @@ public class FileService {
         }
     }
 
-    public Detection[] sendPathToModel(List<String> fileNames) {
+    public Detection[] sendPathToModel(List<String> fileNames, Long sessionId) {
         String url = "http://127.0.0.1:5000/callModel";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -42,11 +50,16 @@ public class FileService {
         HttpEntity<Map<String, Path>> entity = new HttpEntity<>(map, headers);
         ResponseEntity<Object[]> response = restTemplate.exchange(url, HttpMethod.POST, entity, Object[].class);
 
-        List<Detection>  detections  = new ArrayList<>();
+        List<Detection> detections  = new ArrayList<>();
+//        var ses_det = session.getDetections();
         List<String> results = Arrays.stream(Objects.requireNonNull(response.getBody())).map(Object::toString).collect(Collectors.toList());
         fileNames.forEach(file -> {
             try {
-                detections.add(new Detection(results.get(fileNames.indexOf(file)), Base64.getEncoder().encodeToString( Files.readAllBytes(Paths.get("results/" + file)))));
+                var detect = new Detection(results.get(fileNames.indexOf(file)), Files.readAllBytes(Paths.get("results/" + file)));
+                detections.add(detect);
+                var session = sessionService.getSessionById(sessionId);
+                detect.setSession(session);
+                this.repository.save(detect);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -70,6 +83,10 @@ public class FileService {
 
     public void initFolder() throws IOException {
         FileUtils.cleanDirectory(new File(folderPath));
+    }
+
+    public Detection[] getDetectionsBySessionId(Long sessionId){
+        return this.repository.findAllBySessionId(sessionId);
     }
 
 }

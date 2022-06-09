@@ -6,7 +6,7 @@ img{
 }
 .file-picker{
   margin-top: 10vh;
-  margin-left: 40vw;
+  margin-left: 30vw;
   .progress{
     position: absolute;
     width: 20%;
@@ -36,3 +36,18 @@ img{
   width: 170px;
   font-size: 20px;
 }
+mat-card-content{
+  height: 600px;
+  text-align: center;
+
+}
+
+img{
+  border: 1px black solid;
+}
+//mat-progress-bar{
+//  width: 100vw;
+//  margin-left: 0 !important;
+//  padding-left: 0 !important;
+//  position: absolute;
+//}

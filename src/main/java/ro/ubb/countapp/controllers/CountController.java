@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ro.ubb.countapp.domain.Detection;
 import ro.ubb.countapp.services.FileService;
+import ro.ubb.countapp.services.SessionService;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +23,12 @@ public class CountController {
     @Autowired
     FileService fileService;
 
+    @Autowired
+    SessionService sessionService;
+
     @PostMapping(value = "/count-apples")
     @ResponseBody
-    public Detection[] getNumberOfApples(@RequestParam(name="files[]") MultipartFile[] files) throws IOException{
+    public Detection[] getNumberOfApples(@RequestParam(name="files[]") MultipartFile[] files, @RequestParam(name="sessionId") String sessionId) throws IOException{
         List<String> fileNames = new ArrayList<>();
         fileService.initFolder();
         Arrays.stream(files).forEach(file -> {
@@ -32,6 +36,11 @@ public class CountController {
             fileService.saveFileToFolder(file);
             fileNames.add(file.getOriginalFilename());
         });
-        return fileService.sendPathToModel(fileNames);
+        var detections = fileService.sendPathToModel(fileNames, Long.parseLong(sessionId));
+//        var session = sessionService.getSessionById(Long.parseLong(sessionId));
+//        session.setDetections(List.of(detections));
+        return detections;
     }
+
+
 }

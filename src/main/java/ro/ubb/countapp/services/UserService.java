@@ -83,4 +83,8 @@ public class UserService {
 
         return generateJwtToken(found.get());
     }
+
+    public User getUserById(long parseLong) {
+        return this.userRepository.getById(parseLong);
+    }
 }

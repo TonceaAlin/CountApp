@@ -9,6 +9,7 @@ import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {NgForm} from "@angular/forms";
 import {DatePipe} from "@angular/common";
 import {Session} from "../../domain/session";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-file-picker',
@@ -29,7 +30,9 @@ export class FilePickerComponent{
   displayImage : boolean = false;
   selectedFiles: string[] = [];
   file : any;
-  constructor(private service : FileService, private sanitizer: DomSanitizer, public datepipe: DatePipe) {
+  loading: boolean = false;
+  constructor(private service : FileService, private sanitizer: DomSanitizer, public datepipe: DatePipe
+  ,private snackBar: MatSnackBar) {
   }
 
   onFileSelected(event: any) {
@@ -37,12 +40,11 @@ export class FilePickerComponent{
     for (let i = 0 ; i < event.target.files.length; i++){
       this.selectedFiles.push(event.target.files[i])
       this.file = event.target.files[i];
-      console.log(event.target.files[i])
     }
 
-
+    const sessionId = localStorage.getItem("SessionId");
     if (event.target.files.length > 0) {
-      console.log(event.target.files.length)
+      console.log(event.target.files)
       this.selectedFile = this.file;
       this.fileName = this.file.name;
       const formData = new FormData();
@@ -51,7 +53,9 @@ export class FilePickerComponent{
       for (let j = 0 ; j  < this.selectedFiles.length; j++){
         formData.append("files[]", this.selectedFiles[j]);
       }
-
+      // @ts-ignore
+      formData.append("sessionId", sessionId);
+      this.loading = true;
       this.service.countApples(formData).subscribe(
         (detect: any) => {
               this.selectedFiles = []
@@ -65,6 +69,7 @@ export class FilePickerComponent{
 
               // this.image = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' + detect.imageBytes);
               this.displayImage = true;
+              this.loading = false;
         },
         (err : any) => {
           console.log(err);
@@ -74,14 +79,29 @@ export class FilePickerComponent{
     }
   }
   startSession(form: NgForm){
-    // this.sessionStarted = true;
+    if(form.value.name == ""){
+      return
+    }
+    this.sessionStarted = true;
     let name = form.value.name
     let now = new Date();
     let time = this.datepipe.transform(now, 'medium');
     let user = localStorage.getItem("Id")
     let session = new Session(name, time, user);
     this.service.startSession(session).subscribe((result: any) =>{
-      console.log(result)
+      localStorage.setItem("SessionId", String(result))
+      this.snackBar.open("session started", "OK", {
+        duration: 3000
+      })
     });
+    form.value.name = ""
+  }
+
+  stopSession(){
+    this.sessionStarted = false;
+    this.snackBar.open("session stoped, results saved", "OK", {
+    duration: 3000
+  })
+
   }
 }

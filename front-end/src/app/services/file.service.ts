@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpRequest} from "@angular/common/http";
+import {HttpClient, HttpParams, HttpRequest} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Detection} from "../domain/detection";
 import {Session} from "../domain/session";
@@ -18,9 +18,7 @@ export class FileService {
   }
 
   countApples(data: FormData): Observable<Detection>{
-    return this.httpClient.post<Detection>(`${(this.baseUrl)}/file/count-apples`, data, {
-      reportProgress: true
-    })
+    return this.httpClient.post<Detection>(`${(this.baseUrl)}/file/count-apples`,data)
   }
 
   startSession(data: Session): any{
